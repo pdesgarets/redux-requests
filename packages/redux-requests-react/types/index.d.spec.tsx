@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { RequestAction } from '@redux-requests/core';
 
-import {
-  Query,
-  Mutation,
-  useQuery,
-  useMutation,
-  useDispatchRequest,
-} from './index';
+import { useQuery, useMutation, useDispatchRequest } from './index';
 
 function fetchBooks(
   x: number,
@@ -51,8 +45,6 @@ function updateBook(id: string): RequestAction<{ id: string; title: string }> {
 const query = useQuery<string>({ type: 'Query' });
 const query2 = useQuery<number>({
   type: 'Query',
-  multiple: true,
-  defaultData: {},
   variables: [{ x: 1, y: 2 }],
 });
 query2.data;
@@ -79,122 +71,6 @@ const mutation3 = useMutation({
   variables: ['1'],
 });
 const r2 = mutation3.mutate();
-
-function BasicQuery() {
-  return (
-    <Query<string>
-      selector={state => ({
-        data: 'x',
-        error: null,
-        loading: true,
-        pending: 1,
-        pristine: false,
-        downloadProgress: null,
-        uploadProgress: null,
-      })}
-      type="TYPE"
-    >
-      {({ data }) => data}
-    </Query>
-  );
-}
-
-function BasicQuery2() {
-  return <Query type={fetchBooks}>{({ data }) => data}</Query>;
-}
-
-function Spinner({ extra }) {
-  return <span>loading... {extra}</span>;
-}
-
-function Error({ error, extra }) {
-  return (
-    <span>
-      {error} {extra}
-    </span>
-  );
-}
-
-function Component({ query, extra }) {
-  return (
-    <div>
-      {query.data as number} {extra}
-    </div>
-  );
-}
-
-function QueryWithComponents() {
-  return (
-    <Query<string>
-      type="QUERY"
-      component={Component}
-      loadingComponent={Spinner}
-      loadingComponentProps={{
-        extra: 'extra',
-      }}
-      errorComponent={Error}
-      errorComponentProps={{ extra: 'extra' }}
-      noDataMessage={<span>No data</span>}
-      showLoaderDuringRefetch={false}
-      isDataEmpty={query => true}
-    />
-  );
-}
-
-function BasicMutation() {
-  return (
-    <Mutation type="Mutation">
-      {({ loading, error }) => (
-        <div>
-          {loading && 'loading'}
-          {error}
-        </div>
-      )}
-    </Mutation>
-  );
-}
-
-function MutationComponent({ mutation, extra }) {
-  return (
-    <div>
-      {mutation.loading && 'loading'}
-      {mutation.error}
-      {extra}
-    </div>
-  );
-}
-
-function MutationWithCustomComponent() {
-  return (
-    <Mutation
-      type="MUTATION"
-      requestKey="key"
-      component={MutationComponent}
-      extra="extra"
-    />
-  );
-}
-
-function MutationWithSelector() {
-  return (
-    <Mutation
-      selector={state => ({
-        error: null,
-        loading: false,
-        pending: 1,
-        downloadProgress: null,
-        uploadProgress: null,
-      })}
-    >
-      {({ loading, error }) => (
-        <div>
-          {loading && 'loading'}
-          {error}
-        </div>
-      )}
-    </Mutation>
-  );
-}
 
 const QueryDispatcher = () => {
   const dispatch = useDispatchRequest();
